@@ -20,28 +20,26 @@ final case class GameState(player: GameState.Player, level: Level, remainingFram
     )
   }
 
+  private def occupiedTiles(playerX: Int, playerY: Int): List[Int] =
+    List(
+      level.tiles(playerY / Constants.tileSize)(playerX / Constants.tileSize),
+      level.tiles(playerY / Constants.tileSize)((playerX + 15) / Constants.tileSize),
+      level.tiles((playerY + 31) / Constants.tileSize)(playerX / Constants.tileSize),
+      level.tiles((playerY + 31) / Constants.tileSize)((playerX + 15) / Constants.tileSize)
+    )
+
   private lazy val movePlayer: GameState = {
     val dx = player.vx
     val dy = player.vy
     val playerXMove = if (dx != 0) {
       val newX = player.x + dx
-      lazy val tiles = List(
-        level.tiles(player.yInt / Constants.tileSize)(newX.toInt / Constants.tileSize),
-        level.tiles(player.yInt / Constants.tileSize)((newX.toInt + 15) / Constants.tileSize),
-        level.tiles((player.yInt + 31) / Constants.tileSize)(newX.toInt / Constants.tileSize),
-        level.tiles((player.yInt + 31) / Constants.tileSize)((newX.toInt + 15) / Constants.tileSize)
-      )
+      lazy val tiles = occupiedTiles(newX.toInt, player.yInt)
       if (newX < 0 || newX + 15 >= level.width * Constants.tileSize || tiles.exists(_ >= 10)) player
       else player.copy(x = newX)
     } else player
 
     val newY = playerXMove.y + dy
-    lazy val tiles = List(
-      level.tiles(newY.toInt / Constants.tileSize)(playerXMove.xInt / Constants.tileSize),
-      level.tiles((newY.toInt) / Constants.tileSize)((playerXMove.xInt + 15) / Constants.tileSize),
-      level.tiles((newY.toInt + 31) / Constants.tileSize)(playerXMove.xInt / Constants.tileSize),
-      level.tiles((newY.toInt + 31) / Constants.tileSize)((playerXMove.xInt + 15) / Constants.tileSize)
-    )
+    lazy val tiles = occupiedTiles(playerXMove.xInt, newY.toInt)
     val newPlayer =
       if (newY < 0 || newY + 31 >= level.height * Constants.tileSize || tiles.exists(_ >= 10))
         playerXMove
@@ -60,10 +58,11 @@ final case class GameState(player: GameState.Player, level: Level, remainingFram
     copy(player = player.copy(vx = nextVx, vy = nextVy))
   }
 
-  lazy val canJump: Boolean = List(
-    level.tiles((player.yInt + 32) / Constants.tileSize)(player.xInt / Constants.tileSize),
-    level.tiles((player.yInt + 32) / Constants.tileSize)((player.xInt + 15) / Constants.tileSize)
-  ).exists(_ >= 10)
+  lazy val canJump: Boolean = 
+    occupiedTiles(player.xInt, player.yInt + 1).drop(2).exists(_ >= 10)
+
+  lazy val finished: Boolean = 
+    occupiedTiles(player.xInt, player.yInt).exists(_ == 9)
 
   private def processInput(key: KeyboardInput): GameState =
     if (key.isDown(KeyboardInput.Key.Space) && canJump)
@@ -85,6 +84,7 @@ final case class GameState(player: GameState.Player, level: Level, remainingFram
       if (loop <= 0) acc
       else aux(acc.processInput(key).movePlayer.updateVelocity, loop - 1)
     if (remainingFrames <= 0) GameOver
+    else if (finished) Menu
     else aux(this, Constants.speedMultiplier).copy(remainingFrames = remainingFrames - 1)
   }
 }
