@@ -7,6 +7,8 @@ import eu.joaocosta.minart.runtime._
 object Resources {
   val character = SpriteSheet(Image.loadBmpImage(Resource("assets/character.bmp")).get, 16, 32)
 
+  val timer = SpriteSheet(Image.loadBmpImage(Resource("assets/timer.bmp")).get, 48, 16)
+
   val volcanoBackground = Image.loadBmpImage(Resource("assets/background.bmp")).get
   val volcanoTileset    = SpriteSheet(Image.loadBmpImage(Resource("assets/volcano-tiles.bmp")).get, 16, 16)
   val volcanoLevel      = Level.load(Resource("assets/level.txt"), volcanoTileset, volcanoBackground)

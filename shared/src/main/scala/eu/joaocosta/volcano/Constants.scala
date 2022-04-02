@@ -15,4 +15,6 @@ object Constants {
   val acceleration     = 0.25
   val drag             = 0.2
   val maxSpeed         = 1.0
+
+  val maximumTime = 120 * 60 // 120 s
 }
