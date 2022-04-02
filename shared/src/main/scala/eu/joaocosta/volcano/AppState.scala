@@ -8,6 +8,7 @@ sealed trait AppState
 
 case object Menu extends AppState
 case object GameOver extends AppState
+final case class LevelTransition(finalState: GameState, frame: Int) extends AppState
 
 final case class GameState(player: GameState.Player, level: Level, remainingFrames: Int) extends AppState {
 
@@ -62,7 +63,7 @@ final case class GameState(player: GameState.Player, level: Level, remainingFram
     occupiedTiles(player.xInt, player.yInt + 1).drop(2).exists(_ >= 10)
 
   lazy val finished: Boolean = 
-    occupiedTiles(player.xInt, player.yInt).exists(_ == 9)
+    canJump && occupiedTiles(player.xInt, player.yInt).exists(_ == 9)
 
   private def processInput(key: KeyboardInput): GameState =
     if (key.isDown(KeyboardInput.Key.Space) && canJump)
@@ -84,7 +85,7 @@ final case class GameState(player: GameState.Player, level: Level, remainingFram
       if (loop <= 0) acc
       else aux(acc.processInput(key).movePlayer.updateVelocity, loop - 1)
     if (remainingFrames <= 0) GameOver
-    else if (finished) Menu
+    else if (finished) LevelTransition(this, 0)
     else aux(this, Constants.speedMultiplier).copy(remainingFrames = remainingFrames - 1)
   }
 }

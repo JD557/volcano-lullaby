@@ -10,9 +10,10 @@ import eu.joaocosta.minart.runtime.pure._
 
 object Main extends MinartApp {
 
-  def playerSurface(player: GameState.Player, frame: Int) = {
+  def playerSurface(player: GameState.Player, frame: Int, singing: Boolean = false) = {
     val sprite =
-      if (player.vy != 0) Resources.character.getSprite(2, 0)
+      if (singing) Resources.character.getSprite(3, (frame / Constants.animationMultiplier) % 4)
+      else if (player.vy != 0) Resources.character.getSprite(2, 0)
       else if (player.vx != 0) Resources.character.getSprite(1, (frame / Constants.animationMultiplier) % 4)
       else Resources.character.getSprite(0, (frame / Constants.animationMultiplier)                     % 4)
     if (player.lastDirX == -1) Image.flipH(sprite) else sprite
@@ -50,6 +51,24 @@ object Main extends MinartApp {
         newState =
           if (keyboardInput.keysPressed(KeyboardInput.Key.Enter)) Menu
           else state
+      } yield newState
+    case LevelTransition(gameState, frame) =>
+      for {
+        _             <- CanvasIO.redraw
+        keyboardInput <- CanvasIO.getKeyboardInput
+        _             <- CanvasIO.clear()
+        (camX, camY) = gameState.cameraPosition
+        _ <- CanvasIO.blit(gameState.level.background)(-camX / 2, -camY / 2)
+        _ <- CanvasIO.blit(gameState.level.surface, Some(Color(0, 0, 0)))(-camX, -camY)
+        _ <- CanvasIO.blit(playerSurface(gameState.player, frame, singing = true), Some(Color(255, 0, 255)))(
+          gameState.player.xInt - camX,
+          gameState.player.yInt - camY
+        )
+        _ <- CanvasIO.blit(Resources.timer.getSprite(1), Some(Color(255, 0, 255)))(5, 5)
+        _ <- CanvasIO.blit(Resources.timer.getSprite(0), Some(Color(255, 0, 255)))(5, 5, 0, 0, 48 * gameState.remainingFrames / Constants.maximumTime)
+        newState = 
+          if (keyboardInput.keysPressed(KeyboardInput.Key.Enter)) Menu
+          else LevelTransition(gameState, frame + 1)
       } yield newState
     case gs@GameState(player, level, remainingFrames) =>
       for {

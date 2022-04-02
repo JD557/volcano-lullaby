@@ -16,7 +16,7 @@ object Constants {
   val drag             = 0.2
   val maxSpeed         = 1.0
 
-  val maximumTime = 15 * 60 // 120 s
+  val maximumTime = 120 * 60 // 120 s
 
 
 }
