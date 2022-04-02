@@ -13,7 +13,7 @@ object Main extends MinartApp {
   val loopRunner     = LoopRunner()
   val canvasSettings = Canvas.Settings(width = Constants.canvasWidth, height = Constants.canvasHeight, scale = 4)
   val canvasManager  = CanvasManager()
-  val initialState   = GameState(GameState.Player(0, 0.0, 0), Resources.level)
+  val initialState   = GameState(GameState.Player(0, 0, 0, 0), Resources.level)
   val frameRate      = LoopFrequency.hz60
   val terminateWhen  = (_: State) => false
   val renderFrame = (state: State) => for {
@@ -22,8 +22,8 @@ object Main extends MinartApp {
     _ <- CanvasIO.clear()
     (camX, camY) = state.cameraPosition
     _ <- CanvasIO.blit(Resources.background)(-camX / 2, -camY / 2)
-    _ <- CanvasIO.blit(Resources.character, Some(Color(255, 0, 255)))(state.player.x - camX, state.player.y.toInt - camY)
+    _ <- CanvasIO.blit(Resources.character, Some(Color(255, 0, 255)))(state.player.xInt - camX, state.player.yInt - camY)
     _ <- CanvasIO.blit(state.level.surface, Some(Color(0, 0, 0)))(-camX, -camY)
-    newState = state.processInput(keyboardInput).applyGravity
+    newState = state.nextState(keyboardInput)
   } yield newState
 }
