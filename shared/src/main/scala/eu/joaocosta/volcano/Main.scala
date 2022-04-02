@@ -10,11 +10,12 @@ import eu.joaocosta.minart.runtime.pure._
 object Main extends MinartApp {
 
   val tileset = SpriteSheet(Image.loadBmpImage(Resource("assets/tileset.bmp")).get, 16, 16)
+  val character = Image.loadBmpImage(Resource("assets/character.bmp")).get
   val background = Image.loadBmpImage(Resource("assets/background.bmp")).get
-  val level: List[List[Int]] = Resource("assets/level.txt").withSource { source =>
+  val level: Vector[Vector[Int]] = Resource("assets/level.txt").withSource { source =>
     source.getLines().map { line =>
-      line.map(c => c.toString.toInt).toList
-    }.toList
+      line.map(c => c.toString.toInt).toVector
+    }.toVector
   }.get
   val levelHeight = level.size
   val levelWidth = level.head.size
@@ -29,17 +30,26 @@ object Main extends MinartApp {
     surface
   }
 
-  type State = Unit
+  case class GameState(charX: Int, charY: Int) {
+    val charTileX = charX / 16
+    val charTileY = charY / 16
+  }
+
+  type State = GameState
   val loopRunner     = LoopRunner()
   val canvasSettings = Canvas.Settings(width = 320, height = 180, scale = 4)
   val canvasManager  = CanvasManager()
-  val initialState   = ()
-  val frameRate      = LoopFrequency.Uncapped
+  val initialState   = GameState(0, 0)
+  val frameRate      = LoopFrequency.hz60
   val terminateWhen  = (_: State) => false
-  val renderFrame = (_: State) => for {
+  val renderFrame = (gs: State) => for {
     _ <- CanvasIO.redraw
     _ <- CanvasIO.clear()
     _ <- CanvasIO.blit(background)(0, 0)
+    _ <- CanvasIO.blit(character, Some(Color(255, 255, 255)))(gs.charX, gs.charY)
     _ <- CanvasIO.blit(levelSurface, Some(Color(0, 0, 0)))(0, 0)
-  } yield ()
+    newState =
+      if (level(gs.charTileY + 2)(gs.charTileX) == 0) gs.copy(charY = gs.charY + 1)
+      else gs
+  } yield newState
 }
