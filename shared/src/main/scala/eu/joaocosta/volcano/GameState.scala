@@ -19,24 +19,24 @@ final case class GameState(player: GameState.Player, level: Level, frame: Int) {
     val dy = player.vy
     val playerXMove = if (dx != 0) {
       val newX = player.x + dx 
-      lazy val tiles = Set(
+      lazy val tiles = List(
         level.tiles(player.yInt / Constants.tileSize)(newX.toInt / Constants.tileSize),
         level.tiles(player.yInt / Constants.tileSize)((newX.toInt + 15) / Constants.tileSize),
         level.tiles((player.yInt + 31) / Constants.tileSize)(newX.toInt / Constants.tileSize),
         level.tiles((player.yInt + 31) / Constants.tileSize)((newX.toInt + 15) / Constants.tileSize)
       )
-      if (newX < 0 || newX + 15 >= level.width * Constants.tileSize || tiles != Set(0)) player
+      if (newX < 0 || newX + 15 >= level.width * Constants.tileSize || tiles.exists(_ >= 10)) player
       else player.copy(x = newX)
     } else player
 
     val newY = playerXMove.y + dy
-    lazy val tiles = Set(
+    lazy val tiles = List(
       level.tiles(newY.toInt / Constants.tileSize)(playerXMove.xInt / Constants.tileSize),
       level.tiles((newY.toInt) / Constants.tileSize)((playerXMove.xInt + 15) / Constants.tileSize),
       level.tiles((newY.toInt + 31) / Constants.tileSize)(playerXMove.xInt / Constants.tileSize),
       level.tiles((newY.toInt + 31) / Constants.tileSize)((playerXMove.xInt + 15) / Constants.tileSize)
     )
-    val newPlayer = if (newY < 0 || newY + 31 >= level.height * Constants.tileSize || tiles != Set(0))
+    val newPlayer = if (newY < 0 || newY + 31 >= level.height * Constants.tileSize || tiles.exists(_ >= 10))
       playerXMove
     else playerXMove.copy(y = newY)
     copy(player = newPlayer)
@@ -53,10 +53,10 @@ final case class GameState(player: GameState.Player, level: Level, frame: Int) {
     copy(player = player.copy(vx = nextVx, vy = nextVy))
   }
 
-  lazy val canJump: Boolean = Set(
+  lazy val canJump: Boolean = List(
       level.tiles((player.yInt + 32) / Constants.tileSize)(player.xInt / Constants.tileSize),
       level.tiles((player.yInt + 32) / Constants.tileSize)((player.xInt + 15) / Constants.tileSize)
-    ).exists(_ != 0)
+    ).exists(_ >= 10)
 
 
   private def processInput(key: KeyboardInput): GameState = 

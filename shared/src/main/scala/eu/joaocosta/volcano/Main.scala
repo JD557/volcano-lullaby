@@ -30,8 +30,8 @@ object Main extends MinartApp {
     _ <- CanvasIO.clear()
     (camX, camY) = state.cameraPosition
     _ <- CanvasIO.blit(Resources.background)(-camX / 2, -camY / 2)
-    _ <- CanvasIO.blit(playerSurface(state.player, state.frame), Some(Color(255, 0, 255)))(state.player.xInt - camX, state.player.yInt - camY)
     _ <- CanvasIO.blit(state.level.surface, Some(Color(0, 0, 0)))(-camX, -camY)
+    _ <- CanvasIO.blit(playerSurface(state.player, state.frame), Some(Color(255, 0, 255)))(state.player.xInt - camX, state.player.yInt - camY)
     newState = state.nextState(keyboardInput)
   } yield newState
 }

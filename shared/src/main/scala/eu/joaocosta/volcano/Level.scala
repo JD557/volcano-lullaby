@@ -24,7 +24,7 @@ object Level {
   def load(levelFile: Resource, tileset: SpriteSheet): Level = {
     Level(levelFile.withSource { source =>
       source.getLines().map { line =>
-        line.map(c => Integer.parseInt(c.toString, 16)).toVector
+        line.map(c => Integer.parseInt(c.toString, Character.MAX_RADIX)).toVector
       }.toVector
     }.get, tileset)
   }
