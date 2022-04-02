@@ -11,7 +11,7 @@ object Main extends MinartApp {
 
   type State = GameState
   val loopRunner     = LoopRunner()
-  val canvasSettings = Canvas.Settings(width = 320, height = 180, scale = 4)
+  val canvasSettings = Canvas.Settings(width = Constants.canvasWidth, height = Constants.canvasHeight, scale = 4)
   val canvasManager  = CanvasManager()
   val initialState   = GameState(GameState.Player(0, 0.0, 0), Resources.level)
   val frameRate      = LoopFrequency.hz60
