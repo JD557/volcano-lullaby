@@ -2,6 +2,7 @@ package eu.joaocosta.volcano
 
 import eu.joaocosta.minart.backend.defaults._
 import eu.joaocosta.minart.graphics._
+import eu.joaocosta.minart.input._
 import eu.joaocosta.minart.graphics.image._
 import eu.joaocosta.minart.graphics.pure._
 import eu.joaocosta.minart.runtime._
@@ -17,7 +18,7 @@ object Main extends MinartApp {
     if (player.lastDirX == -1) Image.flipH(sprite) else sprite
   }
 
-  type State = GameState
+  type State = AppState
   val loopRunner = LoopRunner()
   val canvasSettings = Canvas.Settings(
     width = Constants.canvasWidth,
@@ -26,23 +27,45 @@ object Main extends MinartApp {
     clearColor = Color(0, 0, 0)
   )
   val canvasManager = CanvasManager()
-  val initialState  = GameState(GameState.Player(0, 0, 0, 0, 0), Resources.introLevel, Constants.maximumTime)
+  val initialState  = Menu
   val frameRate     = LoopFrequency.hz60
   val terminateWhen = (_: State) => false
-  val renderFrame = (state: State) =>
-    for {
-      _             <- CanvasIO.redraw
-      keyboardInput <- CanvasIO.getKeyboardInput
-      _             <- CanvasIO.clear()
-      (camX, camY) = state.cameraPosition
-      _ <- CanvasIO.blit(state.level.background)(-camX / 2, -camY / 2)
-      _ <- CanvasIO.blit(state.level.surface, Some(Color(0, 0, 0)))(-camX, -camY)
-      _ <- CanvasIO.blit(playerSurface(state.player, state.remainingFrames), Some(Color(255, 0, 255)))(
-        state.player.xInt - camX,
-        state.player.yInt - camY
-      )
-      _ <- CanvasIO.blit(Resources.timer.getSprite(1), Some(Color(255, 0, 255)))(5, 5)
-      _ <- CanvasIO.blit(Resources.timer.getSprite(0), Some(Color(255, 0, 255)))(5, 5, 0, 0, 48 * state.remainingFrames / Constants.maximumTime)
-      newState = state.nextState(keyboardInput)
-    } yield newState
+  val renderFrame = (state: State) => state match {
+    case Menu =>
+      for {
+        _             <- CanvasIO.redraw
+        keyboardInput <- CanvasIO.getKeyboardInput
+        _             <- CanvasIO.clear()
+        _ <- CanvasIO.blit(Resources.menu)(0, 0)
+        newState =
+          if (keyboardInput.keysPressed(KeyboardInput.Key.Enter)) GameState.initialState
+          else state
+      } yield newState
+    case GameOver =>
+      for {
+        _             <- CanvasIO.redraw
+        keyboardInput <- CanvasIO.getKeyboardInput
+        _             <- CanvasIO.clear()
+        _ <- CanvasIO.blit(Resources.gameOver)(0, 0)
+        newState =
+          if (keyboardInput.keysPressed(KeyboardInput.Key.Enter)) Menu
+          else state
+      } yield newState
+    case gs@GameState(player, level, remainingFrames) =>
+      for {
+        _             <- CanvasIO.redraw
+        keyboardInput <- CanvasIO.getKeyboardInput
+        _             <- CanvasIO.clear()
+        (camX, camY) = gs.cameraPosition
+        _ <- CanvasIO.blit(level.background)(-camX / 2, -camY / 2)
+        _ <- CanvasIO.blit(level.surface, Some(Color(0, 0, 0)))(-camX, -camY)
+        _ <- CanvasIO.blit(playerSurface(player, remainingFrames), Some(Color(255, 0, 255)))(
+          player.xInt - camX,
+          player.yInt - camY
+        )
+        _ <- CanvasIO.blit(Resources.timer.getSprite(1), Some(Color(255, 0, 255)))(5, 5)
+        _ <- CanvasIO.blit(Resources.timer.getSprite(0), Some(Color(255, 0, 255)))(5, 5, 0, 0, 48 * remainingFrames / Constants.maximumTime)
+        newState = gs.nextState(keyboardInput)
+      } yield newState
+  }
 }

@@ -4,7 +4,12 @@ import eu.joaocosta.minart.input._
 import eu.joaocosta.minart.graphics._
 import eu.joaocosta.minart.graphics.image._
 
-final case class GameState(player: GameState.Player, level: Level, remainingFrames: Int) {
+sealed trait AppState
+
+case object Menu extends AppState
+case object GameOver extends AppState
+
+final case class GameState(player: GameState.Player, level: Level, remainingFrames: Int) extends AppState {
 
   lazy val cameraPosition = {
     val indendedX = player.xInt - (Constants.tileSize / 2) - (Constants.canvasWidth / 2)
@@ -75,11 +80,12 @@ final case class GameState(player: GameState.Player, level: Level, remainingFram
       copy(player = player.copy(vx = newVx, lastDirX = -1))
     } else this
 
-  def nextState(key: KeyboardInput): GameState = {
+  def nextState(key: KeyboardInput): AppState = {
     def aux(acc: GameState, loop: Int): GameState =
       if (loop <= 0) acc
       else aux(acc.processInput(key).movePlayer.updateVelocity, loop - 1)
-    aux(this, Constants.speedMultiplier).copy(remainingFrames = math.max(0, remainingFrames - 1))
+    if (remainingFrames <= 0) GameOver
+    else aux(this, Constants.speedMultiplier).copy(remainingFrames = remainingFrames - 1)
   }
 }
 
@@ -88,4 +94,6 @@ object GameState {
     lazy val xInt = x.toInt
     lazy val yInt = y.toInt
   }
+
+  val initialState  = GameState(GameState.Player(0, 0, 0, 0, 0), Resources.introLevel, Constants.maximumTime)
 }
