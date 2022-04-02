@@ -7,12 +7,12 @@ import eu.joaocosta.minart.runtime._
 
 final case class Level(tiles: Vector[Vector[Int]], tileset: SpriteSheet, background: Surface) {
   val height = tiles.size
-  val width = tiles.map(_.size).maxOption.getOrElse(0)
+  val width  = tiles.map(_.size).maxOption.getOrElse(0)
 
   lazy val surface: RamSurface = {
     val acc = new RamSurface(Vector.fill(height * 16)(Array.fill(width * 16)(Color(0, 0, 0))))
     for {
-      (line, y) <- tiles.zipWithIndex
+      (line, y)   <- tiles.zipWithIndex
       (sprite, x) <- line.zipWithIndex
       if (sprite != 0)
     } acc.blit(tileset.getSprite(sprite - 1))(x * 16, y * 16)
@@ -22,13 +22,22 @@ final case class Level(tiles: Vector[Vector[Int]], tileset: SpriteSheet, backgro
 
 object Level {
   def load(levelFile: Resource, tileset: SpriteSheet, background: Surface): Level = {
-    Level(levelFile.withSource { source =>
-      source.getLines().map { line =>
-        line.map(c => 
-            if (c == ' ') 0
-            else Integer.parseInt(c.toString, Character.MAX_RADIX)
-        ).toVector
-      }.toVector
-    }.get, tileset, background)
+    Level(
+      levelFile.withSource { source =>
+        source
+          .getLines()
+          .map { line =>
+            line
+              .map(c =>
+                if (c == ' ') 0
+                else Integer.parseInt(c.toString, Character.MAX_RADIX)
+              )
+              .toVector
+          }
+          .toVector
+      }.get,
+      tileset,
+      background
+    )
   }
 }
