@@ -12,7 +12,7 @@ ThisBuild / semanticdbVersion := scalafixSemanticdb.revision
 ThisBuild / scalafixOnCompile := true
 
 lazy val root =
-  crossProject(JVMPlatform/*, JSPlatform, NativePlatform*/)
+  crossProject(JVMPlatform, JSPlatform, NativePlatform)
     .in(file("."))
     .settings(
       Seq(
@@ -22,7 +22,7 @@ lazy val root =
       )
     )
     .settings(name := "volcanoRoot")
-    /*.jsSettings(
+    .jsSettings(
       Seq(
         scalaJSUseMainModuleInitializer := true
       )
@@ -34,4 +34,4 @@ lazy val root =
         nativeLTO       := "thin",
         nativeGC        := "immix"
       )
-    )*/
+    )
