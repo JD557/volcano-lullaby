@@ -96,5 +96,5 @@ object GameState {
     lazy val yInt = y.toInt
   }
 
-  val initialState = GameState(GameState.Player(0, 0, 0, 0, 0), Resources.introLevel, Constants.maximumTime)
+  val initialState = GameState(GameState.Player(0, 0, 0, 0, 0), Resources.forestLevel, Constants.maximumTime)
 }
