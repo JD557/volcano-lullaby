@@ -1,13 +1,13 @@
 package eu.joaocosta.volcano
 
-import eu.joaocosta.minart.input._
 import eu.joaocosta.minart.graphics._
 import eu.joaocosta.minart.graphics.image._
+import eu.joaocosta.minart.input._
 
 sealed trait AppState
 
-case object Menu extends AppState
-case object GameOver extends AppState
+case object Menu                                                    extends AppState
+case object GameOver                                                extends AppState
 final case class LevelTransition(finalState: GameState, frame: Int) extends AppState
 
 final case class GameState(player: GameState.Player, level: Level, remainingFrames: Int) extends AppState {
@@ -33,13 +33,13 @@ final case class GameState(player: GameState.Player, level: Level, remainingFram
     val dx = player.vx
     val dy = player.vy
     val playerXMove = if (dx != 0) {
-      val newX = player.x + dx
+      val newX       = player.x + dx
       lazy val tiles = occupiedTiles(newX.toInt, player.yInt)
       if (newX < 0 || newX + 15 >= level.width * Constants.tileSize || tiles.exists(_ >= 10)) player
       else player.copy(x = newX)
     } else player
 
-    val newY = playerXMove.y + dy
+    val newY       = playerXMove.y + dy
     lazy val tiles = occupiedTiles(playerXMove.xInt, newY.toInt)
     val newPlayer =
       if (newY < 0 || newY + 31 >= level.height * Constants.tileSize || tiles.exists(_ >= 10))
@@ -59,10 +59,10 @@ final case class GameState(player: GameState.Player, level: Level, remainingFram
     copy(player = player.copy(vx = nextVx, vy = nextVy))
   }
 
-  lazy val canJump: Boolean = 
+  lazy val canJump: Boolean =
     occupiedTiles(player.xInt, player.yInt + 1).drop(2).exists(_ >= 10)
 
-  lazy val finished: Boolean = 
+  lazy val finished: Boolean =
     canJump && occupiedTiles(player.xInt, player.yInt).exists(_ == 9)
 
   private def processInput(key: KeyboardInput): GameState =
@@ -96,5 +96,5 @@ object GameState {
     lazy val yInt = y.toInt
   }
 
-  val initialState  = GameState(GameState.Player(0, 0, 0, 0, 0), Resources.introLevel, Constants.maximumTime)
+  val initialState = GameState(GameState.Player(0, 0, 0, 0, 0), Resources.introLevel, Constants.maximumTime)
 }

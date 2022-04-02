@@ -5,7 +5,7 @@ import eu.joaocosta.minart.graphics.image._
 import eu.joaocosta.minart.runtime._
 
 object Resources {
-  val menu = Image.loadBmpImage(Resource("assets/menu.bmp")).get
+  val menu     = Image.loadBmpImage(Resource("assets/menu.bmp")).get
   val gameOver = Image.loadBmpImage(Resource("assets/gameover.bmp")).get
 
   val character = SpriteSheet(Image.loadBmpImage(Resource("assets/character.bmp")).get, 16, 32)
