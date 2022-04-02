@@ -20,9 +20,10 @@ object Main extends MinartApp {
     _ <- CanvasIO.redraw
     keyboardInput <- CanvasIO.getKeyboardInput
     _ <- CanvasIO.clear()
-    _ <- CanvasIO.blit(Resources.background)(0, 0)
-    _ <- CanvasIO.blit(Resources.character, Some(Color(255, 255, 255)))(state.player.x, state.player.y.toInt)
-    _ <- CanvasIO.blit(state.level.surface, Some(Color(0, 0, 0)))(0, 0)
+    (camX, camY) = state.cameraPosition
+    _ <- CanvasIO.blit(Resources.background)(-camX / 2, -camY / 2)
+    _ <- CanvasIO.blit(Resources.character, Some(Color(255, 255, 255)))(state.player.x - camX, state.player.y.toInt - camY)
+    _ <- CanvasIO.blit(state.level.surface, Some(Color(0, 0, 0)))(-camX, -camY)
     newState = state.processInput(keyboardInput).applyGravity
   } yield newState
 }

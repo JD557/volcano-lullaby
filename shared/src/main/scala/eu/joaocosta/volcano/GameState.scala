@@ -5,6 +5,13 @@ import eu.joaocosta.minart.graphics._
 import eu.joaocosta.minart.graphics.image._
 
 final case class GameState(player: GameState.Player, level: Level) {
+
+  lazy val cameraPosition = {
+    val indendedX = player.x - (Constants.tileSize / 2) - (Constants.canvasWidth / 2)
+    val indendedY = player.y.toInt - (Constants.tileSize) - (Constants.canvasHeight / 2)
+    (indendedX, indendedY)
+  }
+
   lazy val applyGravity = {
     val nextVy = math.min(Constants.terminalVelocity, player.vy + Constants.gravity)
     copy(player = player.copy(vy = nextVy))
@@ -25,7 +32,7 @@ final case class GameState(player: GameState.Player, level: Level) {
         level.tiles((player.y.toInt + 31) / Constants.tileSize)(newX / Constants.tileSize),
         level.tiles((player.y.toInt + 31) / Constants.tileSize)((newX + 15) / Constants.tileSize)
       )
-      if (newX < 0 || newX + 15 > level.width * Constants.tileSize || tiles != Set(0)) player
+      if (newX < 0 || newX + 15 >= level.width * Constants.tileSize || tiles != Set(0)) player
       else player.copy(x = newX)
     } else player
 
@@ -36,7 +43,7 @@ final case class GameState(player: GameState.Player, level: Level) {
       level.tiles((newY.toInt + 31) / Constants.tileSize)(playerXMove.x / Constants.tileSize),
       level.tiles((newY.toInt + 31) / Constants.tileSize)((playerXMove.x + 15) / Constants.tileSize)
     )
-    val newPlayer = if (newY < 0 || newY + 31 > level.height * Constants.tileSize || tiles != Set(0))
+    val newPlayer = if (newY < 0 || newY + 31 >= level.height * Constants.tileSize || tiles != Set(0))
       playerXMove
     else playerXMove.copy(y = newY)
     copy(player = newPlayer)
@@ -44,7 +51,7 @@ final case class GameState(player: GameState.Player, level: Level) {
 
   def processInput(key: KeyboardInput) = 
     if (key.isDown(KeyboardInput.Key.Space) && canJump)
-      copy(player = player.copy(vy = Constants.jumpSpeed)).movePlayer(0)
+      copy(player = player.copy(vy = -Constants.jumpSpeed)).movePlayer(0)
     else if (key.isDown(KeyboardInput.Key.Right)) movePlayer(1)
     else if (key.isDown(KeyboardInput.Key.Left)) movePlayer(-1)
     else movePlayer(0)
