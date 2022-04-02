@@ -9,7 +9,9 @@ final case class GameState(player: GameState.Player, level: Level) {
   lazy val cameraPosition = {
     val indendedX = player.x - (Constants.tileSize / 2) - (Constants.canvasWidth / 2)
     val indendedY = player.y.toInt - (Constants.tileSize) - (Constants.canvasHeight / 2)
-    (indendedX, indendedY)
+    (math.max(0,math.min(indendedX, level.width * Constants.tileSize - Constants.canvasWidth)),
+      math.max(0, math.min(indendedY, level.height * Constants.tileSize - Constants.canvasHeight))
+      )
   }
 
   lazy val applyGravity = {
