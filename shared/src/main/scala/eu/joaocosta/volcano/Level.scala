@@ -5,7 +5,7 @@ import eu.joaocosta.minart.graphics._
 import eu.joaocosta.minart.graphics.image._
 import eu.joaocosta.minart.runtime._
 
-final case class Level(tiles: Vector[Vector[Int]], tileset: SpriteSheet) {
+final case class Level(tiles: Vector[Vector[Int]], tileset: SpriteSheet, background: Surface) {
   val height = tiles.size
   val width = tiles.map(_.size).maxOption.getOrElse(0)
 
@@ -21,11 +21,14 @@ final case class Level(tiles: Vector[Vector[Int]], tileset: SpriteSheet) {
 }
 
 object Level {
-  def load(levelFile: Resource, tileset: SpriteSheet): Level = {
+  def load(levelFile: Resource, tileset: SpriteSheet, background: Surface): Level = {
     Level(levelFile.withSource { source =>
       source.getLines().map { line =>
-        line.map(c => Integer.parseInt(c.toString, Character.MAX_RADIX)).toVector
+        line.map(c => 
+            if (c == ' ') 0
+            else Integer.parseInt(c.toString, Character.MAX_RADIX)
+        ).toVector
       }.toVector
-    }.get, tileset)
+    }.get, tileset, background)
   }
 }
