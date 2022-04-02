@@ -18,12 +18,11 @@ object Main extends MinartApp {
   val terminateWhen  = (_: State) => false
   val renderFrame = (state: State) => for {
     _ <- CanvasIO.redraw
+    keyboardInput <- CanvasIO.getKeyboardInput
     _ <- CanvasIO.clear()
     _ <- CanvasIO.blit(Resources.background)(0, 0)
     _ <- CanvasIO.blit(Resources.character, Some(Color(255, 255, 255)))(state.charX, state.charY)
     _ <- CanvasIO.blit(state.level.surface, Some(Color(0, 0, 0)))(0, 0)
-    newState =
-      if (state.level.tiles(state.charTileY + 2)(state.charTileX) == 0) state.copy(charY = state.charY + 1)
-      else state
+    newState = state.processInput(keyboardInput).applyGravity
   } yield newState
 }
