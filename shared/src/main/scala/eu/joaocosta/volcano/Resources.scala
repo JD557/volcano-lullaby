@@ -6,7 +6,7 @@ import eu.joaocosta.minart.runtime._
 
 object Resources {
   val tileset = SpriteSheet(Image.loadBmpImage(Resource("assets/tileset.bmp")).get, 16, 16)
-  val character = Image.loadBmpImage(Resource("assets/character.bmp")).get
+  val character = SpriteSheet(Image.loadBmpImage(Resource("assets/character.bmp")).get, 16, 32)
   val background = Image.loadBmpImage(Resource("assets/background.bmp")).get
   val level = Level.load(Resource("assets/level.txt"), tileset)
 }

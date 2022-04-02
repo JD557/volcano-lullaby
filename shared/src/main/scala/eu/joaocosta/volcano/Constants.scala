@@ -7,6 +7,7 @@ object Constants {
   val tileSize = 16
 
   val speedMultiplier = 2
+  val animationMultiplier = 4
   
   val gravity = 0.05
   val terminalVelocity = 1.0

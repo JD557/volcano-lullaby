@@ -4,7 +4,7 @@ import eu.joaocosta.minart.input._
 import eu.joaocosta.minart.graphics._
 import eu.joaocosta.minart.graphics.image._
 
-final case class GameState(player: GameState.Player, level: Level) {
+final case class GameState(player: GameState.Player, level: Level, frame: Int) {
 
   lazy val cameraPosition = {
     val indendedX = player.xInt - (Constants.tileSize / 2) - (Constants.canvasWidth / 2)
@@ -47,11 +47,13 @@ final case class GameState(player: GameState.Player, level: Level) {
       if (player.vx >= Constants.acceleration) player.vx - Constants.drag
       else if (player.vx <= -Constants.acceleration) player.vx + Constants.drag
       else 0.0
-    val nextVy = math.min(Constants.terminalVelocity, player.vy + Constants.gravity)
+    val nextVy =
+      if (canJump) 0.0
+      else math.min(Constants.terminalVelocity, player.vy + Constants.gravity)
     copy(player = player.copy(vx = nextVx, vy = nextVy))
   }
 
-  private lazy val canJump: Boolean = Set(
+  lazy val canJump: Boolean = Set(
       level.tiles((player.yInt + 32) / Constants.tileSize)(player.xInt / Constants.tileSize),
       level.tiles((player.yInt + 32) / Constants.tileSize)((player.xInt + 15) / Constants.tileSize)
     ).exists(_ != 0)
@@ -64,13 +66,13 @@ final case class GameState(player: GameState.Player, level: Level) {
       val newVx =
         if (player.vx < 0) Constants.acceleration
         else math.min(player.vx + Constants.acceleration, Constants.maxSpeed)
-      copy(player = player.copy(vx = newVx))
+      copy(player = player.copy(vx = newVx, lastDirX = 1))
     }
     else if (key.isDown(KeyboardInput.Key.Left)) {
       val newVx = 
         if (player.vx > 0) -Constants.acceleration
         else math.max(-Constants.maxSpeed, player.vx - Constants.acceleration)
-      copy(player = player.copy(vx = newVx))
+      copy(player = player.copy(vx = newVx, lastDirX = -1))
     }
     else this
 
@@ -78,12 +80,12 @@ final case class GameState(player: GameState.Player, level: Level) {
     def aux(acc: GameState, loop: Int): GameState =
      if (loop <= 0) acc
      else aux(acc.processInput(key).movePlayer.updateVelocity, loop - 1)
-    aux(this, Constants.speedMultiplier)
+    aux(this, Constants.speedMultiplier).copy(frame = frame + 1)
   }
 }
 
 object GameState {
-  final case class Player(x: Double, y: Double, vx: Double, vy: Double) {
+  final case class Player(x: Double, y: Double, vx: Double, vy: Double, lastDirX: Int) {
     lazy val xInt = x.toInt
     lazy val yInt = y.toInt
   }
