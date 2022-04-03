@@ -39,6 +39,8 @@ object Main extends MinartApp {
       Resources.bgSoundChannel.playOnce(Resources.introSound).as(state)
     /*case _: AppState.GameState =>
       Resources.bgSoundChannel.playLooped(Resources.ingameSound).as(state)*/
+    case _: LevelTransition =>
+      Resources.bgSoundChannel.playOnce(Resources.lullabySound).as(state)
     case GameOver =>
       Resources.bgSoundChannel.playOnce(Resources.gameoverSound).as(state)
     case Thanks =>
