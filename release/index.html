@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Volcano Lullaby</title>
+    <style>
+      body {margin: 0px; background-color:#000;}
+    </style>
+  </head>
+  <body>
+    <script type="text/javascript">
+      document.addEventListener("keydown", function(event) {
+        if([32, 37, 38, 39, 40].indexOf(event.keyCode) > -1) {
+          event.preventDefault();
+        }
+      })
+    </script>
+    <script type="text/javascript" src="./main.js"></script>
+  </body>
+</html>
