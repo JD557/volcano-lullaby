@@ -16,5 +16,14 @@ object Constants {
   val drag             = 0.2
   val maxSpeed         = 1.0
 
-  val maximumTime = 120 * 60 // 120 s
+  val maximumTime   = 75 * 60 // 75 s
+  val timeRecharge  = 15 * 60 // 15 s
+  val rechargeSpeed = 5
+
+  lazy val levels = List(
+    Resources.introLevel,
+    Resources.forestLevel,
+    Resources.templeLevel,
+    Resources.volcanoLevel
+  )
 }

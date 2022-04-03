@@ -39,6 +39,7 @@ object Main extends MinartApp {
           keyboardInput <- CanvasIO.getKeyboardInput
           _             <- CanvasIO.clear()
           _             <- CanvasIO.blit(Resources.menu)(0, 0, 0, 180)
+          _             <- CanvasIO.blit(Resources.pressEnter, Some(Color(255, 0, 255)))(137, 128)
           newState =
             if (keyboardInput.keysPressed(KeyboardInput.Key.Enter)) GameState.initialState
             else state
@@ -73,11 +74,29 @@ object Main extends MinartApp {
             0,
             48 * gameState.remainingFrames / Constants.maximumTime
           )
+          _ <- CanvasIO.when(frame > 10)(
+            CanvasIO.blit(Resources.finishText, Some(Color(255, 255, 255)))(73, 32)
+          )
+          _ <- CanvasIO.when(frame > Constants.timeRecharge / Constants.rechargeSpeed)(
+            CanvasIO.blit(Resources.pressEnter, Some(Color(255, 0, 255)))(137, 128)
+          )
           newState =
-            if (keyboardInput.keysPressed(KeyboardInput.Key.Enter)) Menu
+            if (
+              keyboardInput.keysPressed(
+                KeyboardInput.Key.Enter
+              ) && frame > Constants.timeRecharge / Constants.rechargeSpeed
+            )
+              gameState.nextLevel
+            else if (frame < Constants.timeRecharge / Constants.rechargeSpeed)
+              LevelTransition(
+                gameState.copy(
+                  remainingFrames = math.min(gameState.remainingFrames + Constants.rechargeSpeed, Constants.maximumTime)
+                ),
+                frame + 1
+              )
             else LevelTransition(gameState, frame + 1)
         } yield newState
-      case gs @ GameState(player, level, remainingFrames) =>
+      case gs @ GameState(player, level, _, remainingFrames, _) =>
         for {
           _             <- CanvasIO.redraw
           keyboardInput <- CanvasIO.getKeyboardInput
@@ -96,6 +115,9 @@ object Main extends MinartApp {
             0,
             0,
             48 * remainingFrames / Constants.maximumTime
+          )
+          _ <- CanvasIO.when(gs.frame < 60 && gs.frame % 20 < 10)(
+            CanvasIO.blit(Resources.goText, Some(Color(255, 255, 255)))(128, 64)
           )
           newState = gs.nextState(keyboardInput)
         } yield newState

@@ -10,7 +10,19 @@ case object Menu                                                    extends AppS
 case object GameOver                                                extends AppState
 final case class LevelTransition(finalState: GameState, frame: Int) extends AppState
 
-final case class GameState(player: GameState.Player, level: Level, remainingFrames: Int) extends AppState {
+final case class GameState(
+    player: GameState.Player,
+    level: Level,
+    startingFrames: Int,
+    remainingFrames: Int,
+    nextLevels: List[Level]
+) extends AppState {
+
+  lazy val nextLevel =
+    if (nextLevels.isEmpty) Menu
+    else GameState(GameState.Player(), nextLevels.head, remainingFrames, remainingFrames, nextLevels.tail)
+
+  val frame = startingFrames - remainingFrames
 
   lazy val cameraPosition = {
     val indendedX = player.xInt - (Constants.tileSize / 2) - (Constants.canvasWidth / 2)
@@ -93,10 +105,17 @@ final case class GameState(player: GameState.Player, level: Level, remainingFram
 }
 
 object GameState {
-  final case class Player(x: Double, y: Double, vx: Double, vy: Double, lastDirX: Int) {
+  final case class Player(x: Double = 0.0, y: Double = 0.0, vx: Double = 0.0, vy: Double = 0.0, lastDirX: Int = 0) {
     lazy val xInt = x.toInt
     lazy val yInt = y.toInt
   }
 
-  val initialState = GameState(GameState.Player(0, 0, 0, 0, 0), Resources.templeLevel, Constants.maximumTime)
+  val initialState =
+    GameState(
+      GameState.Player(),
+      Constants.levels.head,
+      Constants.maximumTime,
+      Constants.maximumTime,
+      Constants.levels.tail
+    )
 }
