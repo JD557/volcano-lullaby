@@ -22,7 +22,7 @@ final case class GameState(
 ) extends AppState {
 
   lazy val nextLevel =
-    if (nextLevels.isEmpty) Menu
+    if (nextLevels.isEmpty) Thanks
     else GameState(GameState.Player(), nextLevels.head, remainingFrames, remainingFrames, nextLevels.tail)
 
   val frame = startingFrames - remainingFrames
