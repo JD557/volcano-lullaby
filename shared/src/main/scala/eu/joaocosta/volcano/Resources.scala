@@ -32,8 +32,9 @@ object Resources {
   val templeTileset    = SpriteSheet(Image.loadBmpImage(Resource("assets/temple-tiles.bmp")).get, 16, 16)
   val templeLevel      = Level.load(Resource("assets/level-temple.txt"), templeTileset, templeBackground)
 
-  val soundPlayer    = SoundPlayer.default()
-  val bgSoundChannel = soundPlayer.newChannel()
+  val soundPlayer     = SoundPlayer.default()
+  val bgSoundChannel  = soundPlayer.newChannel()
+  val sfxSoundChannel = soundPlayer.newChannel()
 
   val introSound = soundPlayer.loadClip(Resource(Platform() match {
     case Platform.JS => "assets/intro.mp3"
@@ -43,4 +44,5 @@ object Resources {
     case Platform.JS => "assets/menu.mp3"
     case _           => "assets/menu.mid"
   }))
+  val jumpSound = soundPlayer.loadClip(Resource("assets/jump.wav"))
 }
