@@ -47,3 +47,4 @@ Tools:
  - LibreSprite
  - Gimp
  - MuseScore
+ - Audacity
