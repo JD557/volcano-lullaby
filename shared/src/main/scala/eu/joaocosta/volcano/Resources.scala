@@ -5,33 +5,33 @@ import eu.joaocosta.minart.extra._
 import eu.joaocosta.minart.graphics.image._
 import eu.joaocosta.minart.runtime._
 object Resources {
-  val menu     = Image.loadBmpImage(Resource("assets/menu.bmp")).get
-  val gameOver = Image.loadBmpImage(Resource("assets/gameover.bmp")).get
+  val menu     = Image.loadQoiImage(Resource("assets/menu.qoi")).get
+  val gameOver = Image.loadQoiImage(Resource("assets/gameover.qoi")).get
 
-  val logo       = Image.loadBmpImage(Resource("assets/logo.bmp")).get
-  val thanks     = Image.loadBmpImage(Resource("assets/thanks.bmp")).get
-  val goText     = Image.loadBmpImage(Resource("assets/go.bmp")).get
+  val logo       = Image.loadQoiImage(Resource("assets/logo.qoi")).get
+  val thanks     = Image.loadQoiImage(Resource("assets/thanks.qoi")).get
+  val goText     = Image.loadQoiImage(Resource("assets/go.qoi")).get
   val finishText = Image.loadQoiImage(Resource("assets/finish.qoi")).get
   val pressEnter = Image.loadQoiImage(Resource("assets/press-enter.qoi")).get
 
-  val character = SpriteSheet(Image.loadBmpImage(Resource("assets/character.bmp")).get, 16, 32)
+  val character = SpriteSheet(Image.loadQoiImage(Resource("assets/character.qoi")).get, 16, 32)
 
-  val timer = SpriteSheet(Image.loadBmpImage(Resource("assets/timer.bmp")).get, 48, 16)
+  val timer = SpriteSheet(Image.loadQoiImage(Resource("assets/timer.qoi")).get, 48, 16)
 
-  val volcanoBackground = Image.loadBmpImage(Resource("assets/background.bmp")).get
-  val volcanoTileset    = SpriteSheet(Image.loadBmpImage(Resource("assets/volcano-tiles.bmp")).get, 16, 16)
+  val volcanoBackground = Image.loadQoiImage(Resource("assets/volcano-bg.qoi")).get
+  val volcanoTileset    = SpriteSheet(Image.loadQoiImage(Resource("assets/volcano-tiles.qoi")).get, 16, 16)
   val volcanoLevel      = Level.load(Resource("assets/level-volcano.txt"), volcanoTileset, volcanoBackground)
 
-  val beachBackground = Image.loadBmpImage(Resource("assets/intro-bg.bmp")).get
-  val beachTileset    = SpriteSheet(Image.loadBmpImage(Resource("assets/beach-tiles.bmp")).get, 16, 16)
+  val beachBackground = Image.loadQoiImage(Resource("assets/intro-bg.qoi")).get
+  val beachTileset    = SpriteSheet(Image.loadQoiImage(Resource("assets/beach-tiles.qoi")).get, 16, 16)
   val introLevel      = Level.load(Resource("assets/level-intro.txt"), beachTileset, beachBackground)
 
-  val forestBackground = Image.loadBmpImage(Resource("assets/forest-bg.bmp")).get
-  val forestTileset    = SpriteSheet(Image.loadBmpImage(Resource("assets/forest-tiles.bmp")).get, 16, 16)
+  val forestBackground = Image.loadQoiImage(Resource("assets/forest-bg.qoi")).get
+  val forestTileset    = SpriteSheet(Image.loadQoiImage(Resource("assets/forest-tiles.qoi")).get, 16, 16)
   val forestLevel      = Level.load(Resource("assets/level-forest.txt"), forestTileset, forestBackground)
 
-  val templeBackground = Image.loadBmpImage(Resource("assets/temple-bg.bmp")).get
-  val templeTileset    = SpriteSheet(Image.loadBmpImage(Resource("assets/temple-tiles.bmp")).get, 16, 16)
+  val templeBackground = Image.loadQoiImage(Resource("assets/temple-bg.qoi")).get
+  val templeTileset    = SpriteSheet(Image.loadQoiImage(Resource("assets/temple-tiles.qoi")).get, 16, 16)
   val templeLevel      = Level.load(Resource("assets/level-temple.txt"), templeTileset, templeBackground)
 
   val soundPlayer     = SoundPlayer.default()
