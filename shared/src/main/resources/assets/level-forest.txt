@@ -1,13 +1,13 @@
                   JKKKKKKKKKKL                             DEEEEEEEEEE
-                  MNNNNNNNNNNO                             DEEEEEEEEEE
-                  PQQQQQQQQQQR                             DEEEEEEEEEE
+                  PNNNNNNNNNNR                             DEEEEEEEEEE
+                   PQQQQQQQQR                              DEEEEEEEEEE
                         5                                  DEEEEEEEEEE
                         5                                  DEEEEEEEEEE
                         5        JKKL                      DEEEEEEEEEE
                  JKKKL  5JKKL    PQQR                      GHHHHHHHHHE
-                 PQQQR  6PQQQ     5                         12223    D
-            JKL    5    5         5           JKKKKKL       12223    D
-            MNNL   5    5         5           PQQQQQR      ABBBBC   9D
+                 PQQQR  6PQQQ     5          JKL            12223    D
+            JKL    5    5         5          PQQKKKKL       12223    D
+            MNNL   5    5         5            5PQQQR      ABBBBC   9D
             PQQRJKL5    5         5            5           DEEEEEBBBBE
               5 PQR4JKL 5  JKKL   5            5           DEEEEEEEEEE
               67   6PQR 5  PQQR   5 JKKKL   JKL5           DEEEEEEEEEE

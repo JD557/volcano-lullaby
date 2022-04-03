@@ -17,5 +17,4 @@ object Constants {
   val maxSpeed         = 1.0
 
   val maximumTime = 120 * 60 // 120 s
-
 }

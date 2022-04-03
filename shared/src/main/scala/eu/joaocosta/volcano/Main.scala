@@ -38,7 +38,7 @@ object Main extends MinartApp {
           _             <- CanvasIO.redraw
           keyboardInput <- CanvasIO.getKeyboardInput
           _             <- CanvasIO.clear()
-          _             <- CanvasIO.blit(Resources.menu)(0, 0)
+          _             <- CanvasIO.blit(Resources.menu)(0, 0, 0, 180)
           newState =
             if (keyboardInput.keysPressed(KeyboardInput.Key.Enter)) GameState.initialState
             else state
