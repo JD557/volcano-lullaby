@@ -37,8 +37,8 @@ object Main extends MinartApp {
       Resources.bgSoundChannel.playLooped(Resources.menuSound).as(state)
     case _: Intro =>
       Resources.bgSoundChannel.playOnce(Resources.introSound).as(state)
-    /*case _: AppState.GameState =>
-      Resources.bgSoundChannel.playLooped(Resources.ingameSound).as(state)*/
+    case _: GameState =>
+      Resources.bgSoundChannel.playLooped(Resources.inGameSound).as(state)
     case _: LevelTransition =>
       Resources.bgSoundChannel.playOnce(Resources.lullabySound).as(state)
     case GameOver =>
@@ -123,21 +123,24 @@ object Main extends MinartApp {
           _ <- CanvasIO.when(frame > Constants.timeRecharge / Constants.rechargeSpeed)(
             CanvasIO.blit(Resources.pressEnter, Some(Color(255, 0, 255)))(137, 128)
           )
-          newState =
+          newState <-
             if (
               keyboardInput.keysPressed(
                 KeyboardInput.Key.Enter
               ) && frame > Constants.timeRecharge / Constants.rechargeSpeed
             )
-              gameState.nextLevel
+              transitionTo(gameState.nextLevel)
             else if (frame < Constants.timeRecharge / Constants.rechargeSpeed)
-              LevelTransition(
-                gameState.copy(
-                  remainingFrames = math.min(gameState.remainingFrames + Constants.rechargeSpeed, Constants.maximumTime)
-                ),
-                frame + 1
+              CanvasIO.suspend(
+                LevelTransition(
+                  gameState.copy(
+                    remainingFrames =
+                      math.min(gameState.remainingFrames + Constants.rechargeSpeed, Constants.maximumTime)
+                  ),
+                  frame + 1
+                )
               )
-            else LevelTransition(gameState, frame + 1)
+            else CanvasIO.suspend(LevelTransition(gameState, frame + 1))
         } yield newState
       case gs @ GameState(player, level, _, remainingFrames, _) =>
         for {
@@ -165,7 +168,8 @@ object Main extends MinartApp {
           _ <- CanvasIO.when(keyboardInput.isDown(KeyboardInput.Key.Space) && gs.canJump)(
             Resources.sfxSoundChannel.playOnce(Resources.jumpSound)
           )
-          newState <- transitionTo(gs.nextState(keyboardInput))
+          newState = gs.nextState(keyboardInput)
+          _ <- CanvasIO.when(!newState.isInstanceOf[GameState])(transitionTo(newState).unit)
         } yield newState
     }
 }
