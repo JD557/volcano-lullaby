@@ -38,9 +38,9 @@ object Main extends MinartApp {
     case _: Intro =>
       Resources.bgSoundChannel.playOnce(Resources.introSound).as(state)
     /*case _: AppState.GameState =>
-      Resources.bgSoundChannel.playLooped(Resources.ingameSound).as(state)
-    case _: AppState.GameOver =>
-      Resources.bgSoundChannel.playOnce(Resources.gameoverSound).as(state)*/
+      Resources.bgSoundChannel.playLooped(Resources.ingameSound).as(state)*/
+    case GameOver =>
+      Resources.bgSoundChannel.playOnce(Resources.gameoverSound).as(state)
     case _ => CanvasIO.pure(state)
   }
 
@@ -50,11 +50,12 @@ object Main extends MinartApp {
         transitionTo(Intro(0))
       case Intro(frame) =>
         for {
-          _ <- CanvasIO.redraw
-          _ <- CanvasIO.clear()
-          _ <- CanvasIO.blit(Resources.menu)(0, 0, 0, frame / 4)
+          _             <- CanvasIO.redraw
+          keyboardInput <- CanvasIO.getKeyboardInput
+          _             <- CanvasIO.clear()
+          _             <- CanvasIO.blit(Resources.menu)(0, 0, 0, frame / 4)
           newState <-
-            if (frame >= 180 * 4) transitionTo(Menu)
+            if (frame >= 180 * 4 || keyboardInput.keysPressed(KeyboardInput.Key.Enter)) transitionTo(Menu)
             else CanvasIO.suspend(Intro(frame + 1))
         } yield newState
       case Menu =>
@@ -64,9 +65,9 @@ object Main extends MinartApp {
           _             <- CanvasIO.clear()
           _             <- CanvasIO.blit(Resources.menu)(0, 0, 0, 180)
           _             <- CanvasIO.blit(Resources.pressEnter, Some(Color(255, 0, 255)))(137, 128)
-          newState =
-            if (keyboardInput.keysPressed(KeyboardInput.Key.Enter)) GameState.initialState
-            else state
+          newState <-
+            if (keyboardInput.keysPressed(KeyboardInput.Key.Enter)) transitionTo(GameState.initialState)
+            else CanvasIO.suspend(state)
         } yield newState
       case GameOver =>
         for {
@@ -74,9 +75,10 @@ object Main extends MinartApp {
           keyboardInput <- CanvasIO.getKeyboardInput
           _             <- CanvasIO.clear()
           _             <- CanvasIO.blit(Resources.gameOver)(0, 0)
-          newState =
-            if (keyboardInput.keysPressed(KeyboardInput.Key.Enter)) Menu
-            else state
+          _             <- CanvasIO.blit(Resources.pressEnter, Some(Color(255, 0, 255)))(137, 128)
+          newState <-
+            if (keyboardInput.keysPressed(KeyboardInput.Key.Enter)) transitionTo(Menu)
+            else CanvasIO.suspend(state)
         } yield newState
       case LevelTransition(gameState, frame) =>
         for {
@@ -146,7 +148,7 @@ object Main extends MinartApp {
           _ <- CanvasIO.when(keyboardInput.isDown(KeyboardInput.Key.Space) && gs.canJump)(
             Resources.sfxSoundChannel.playOnce(Resources.jumpSound)
           )
-          newState = gs.nextState(keyboardInput)
+          newState <- transitionTo(gs.nextState(keyboardInput))
         } yield newState
     }
 }

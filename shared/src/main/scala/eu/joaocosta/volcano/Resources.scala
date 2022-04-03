@@ -44,5 +44,9 @@ object Resources {
     case Platform.JS => "assets/menu.mp3"
     case _           => "assets/menu.mid"
   }))
+  val gameoverSound = soundPlayer.loadClip(Resource(Platform() match {
+    case Platform.JS => "assets/gameOver.mp3"
+    case _           => "assets/gameOver.mid"
+  }))
   val jumpSound = soundPlayer.loadClip(Resource("assets/jump.wav"))
 }
