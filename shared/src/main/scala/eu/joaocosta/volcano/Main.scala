@@ -44,7 +44,7 @@ object Main extends MinartApp {
     case GameOver =>
       Resources.bgSoundChannel.playOnce(Resources.gameoverSound).as(state)
     case Thanks =>
-      Resources.bgSoundChannel.playOnce(Resources.gameoverSound).as(state)
+      Resources.bgSoundChannel.playOnce(Resources.lullabySound).as(state)
     case _ => CanvasIO.pure(state)
   }
 
