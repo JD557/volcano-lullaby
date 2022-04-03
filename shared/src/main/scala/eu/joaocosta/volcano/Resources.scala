@@ -53,8 +53,8 @@ object Resources {
     case _           => "assets/menu.mid"
   }))
   lazy val gameoverSound = soundPlayer.loadClip(Resource(Platform() match {
-    case Platform.JS => "assets/gameOver.mp3"
-    case _           => "assets/gameOver.mid"
+    case Platform.JS => "assets/gameover.mp3"
+    case _           => "assets/gameover.mid"
   }))
   lazy val lullabySound = soundPlayer.loadClip(Resource(Platform() match {
     case Platform.JS => "assets/lullaby.mp3"
