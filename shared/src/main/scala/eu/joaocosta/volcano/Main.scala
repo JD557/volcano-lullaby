@@ -28,11 +28,35 @@ object Main extends MinartApp {
     clearColor = Color(0, 0, 0)
   )
   val canvasManager = CanvasManager()
-  val initialState  = Menu
+  val initialState  = Loading
   val frameRate     = LoopFrequency.hz60
   val terminateWhen = (_: State) => false
+
+  def transitionTo(state: AppState): CanvasIO[AppState] = state match {
+    case Menu =>
+      Resources.bgSoundChannel.playLooped(Resources.menuSound).as(state)
+    case _: Intro =>
+      Resources.bgSoundChannel.playOnce(Resources.introSound).as(state)
+    /*case _: AppState.GameState =>
+      Resources.bgSoundChannel.playLooped(Resources.ingameSound).as(state)
+    case _: AppState.GameOver =>
+      Resources.bgSoundChannel.playOnce(Resources.gameoverSound).as(state)*/
+    case _ => CanvasIO.pure(state)
+  }
+
   val renderFrame = (state: State) =>
     state match {
+      case Loading =>
+        transitionTo(Intro(0))
+      case Intro(frame) =>
+        for {
+          _ <- CanvasIO.redraw
+          _ <- CanvasIO.clear()
+          _ <- CanvasIO.blit(Resources.menu)(0, 0, 0, frame / 4)
+          newState <-
+            if (frame >= 180 * 4) transitionTo(Menu)
+            else CanvasIO.suspend(Intro(frame + 1))
+        } yield newState
       case Menu =>
         for {
           _             <- CanvasIO.redraw

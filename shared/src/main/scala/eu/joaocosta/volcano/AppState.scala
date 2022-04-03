@@ -6,6 +6,8 @@ import eu.joaocosta.minart.input._
 
 sealed trait AppState
 
+case object Loading                                                 extends AppState
+final case class Intro(frame: Int)                                  extends AppState
 case object Menu                                                    extends AppState
 case object GameOver                                                extends AppState
 final case class LevelTransition(finalState: GameState, frame: Int) extends AppState
