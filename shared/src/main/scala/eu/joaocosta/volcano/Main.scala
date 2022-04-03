@@ -1,6 +1,7 @@
 package eu.joaocosta.volcano
 
 import eu.joaocosta.minart.backend.defaults._
+import eu.joaocosta.minart.extra._
 import eu.joaocosta.minart.graphics._
 import eu.joaocosta.minart.graphics.image._
 import eu.joaocosta.minart.graphics.pure._
@@ -28,7 +29,7 @@ object Main extends MinartApp {
     clearColor = Color(0, 0, 0)
   )
   val canvasManager = CanvasManager()
-  val initialState  = Loading
+  val initialState  = Loading(0, Resources.allResources)
   val frameRate     = LoopFrequency.hz60
   val terminateWhen = (_: State) => false
 
@@ -50,8 +51,36 @@ object Main extends MinartApp {
 
   val renderFrame = (state: State) =>
     state match {
-      case Loading =>
+      case Loading(_, Nil) =>
         transitionTo(Intro(0))
+      case Loading(loaded, loadNext :: remaining) =>
+        for {
+          _ <- CanvasIO.clear()
+          _ <- Geom.renderRect(
+            10,
+            Constants.canvasHeight - 20,
+            Constants.canvasWidth - 10,
+            Constants.canvasHeight - 10,
+            Color(255, 255, 255)
+          )
+          _ <- Geom.renderRect(
+            10 + 2,
+            Constants.canvasHeight - 20 + 2,
+            Constants.canvasWidth - 10 - 2,
+            Constants.canvasHeight - 10 - 2,
+            Color(0, 0, 0)
+          )
+          percentage = loaded.toDouble / (loaded + remaining.size)
+          _ <- Geom.renderRect(
+            10 + 3,
+            Constants.canvasHeight - 20 + 3,
+            (percentage * (Constants.canvasWidth - 10 - 3)).toInt,
+            Constants.canvasHeight - 10 - 3,
+            Color(255, 255, 255)
+          )
+          _ <- CanvasIO.redraw
+          _ = loadNext()
+        } yield Loading(loaded + 1, remaining)
       case Intro(frame) =>
         for {
           _             <- CanvasIO.redraw
