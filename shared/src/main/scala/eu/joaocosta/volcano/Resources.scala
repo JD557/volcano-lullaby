@@ -23,4 +23,8 @@ object Resources {
   val forestBackground = Image.loadBmpImage(Resource("assets/forest-bg.bmp")).get
   val forestTileset    = SpriteSheet(Image.loadBmpImage(Resource("assets/forest-tiles.bmp")).get, 16, 16)
   val forestLevel      = Level.load(Resource("assets/level-forest.txt"), forestTileset, forestBackground)
+
+  val templeBackground = Image.loadBmpImage(Resource("assets/temple-bg.bmp")).get
+  val templeTileset    = SpriteSheet(Image.loadBmpImage(Resource("assets/temple-tiles.bmp")).get, 16, 16)
+  val templeLevel      = Level.load(Resource("assets/level-temple.txt"), templeTileset, templeBackground)
 }

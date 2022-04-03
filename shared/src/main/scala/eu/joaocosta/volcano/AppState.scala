@@ -25,6 +25,8 @@ final case class GameState(player: GameState.Player, level: Level, remainingFram
     List(
       level.tiles(playerY / Constants.tileSize)(playerX / Constants.tileSize),
       level.tiles(playerY / Constants.tileSize)((playerX + 15) / Constants.tileSize),
+      level.tiles((playerY + 15) / Constants.tileSize)(playerX / Constants.tileSize),
+      level.tiles((playerY + 15) / Constants.tileSize)((playerX + 15) / Constants.tileSize),
       level.tiles((playerY + 31) / Constants.tileSize)(playerX / Constants.tileSize),
       level.tiles((playerY + 31) / Constants.tileSize)((playerX + 15) / Constants.tileSize)
     )
@@ -60,7 +62,7 @@ final case class GameState(player: GameState.Player, level: Level, remainingFram
   }
 
   lazy val canJump: Boolean =
-    occupiedTiles(player.xInt, player.yInt + 1).drop(2).exists(_ >= 10)
+    occupiedTiles(player.xInt, player.yInt + 1).drop(4).exists(_ >= 10)
 
   lazy val finished: Boolean =
     canJump && occupiedTiles(player.xInt, player.yInt).exists(_ == 9)
@@ -96,5 +98,5 @@ object GameState {
     lazy val yInt = y.toInt
   }
 
-  val initialState = GameState(GameState.Player(0, 0, 0, 0, 0), Resources.forestLevel, Constants.maximumTime)
+  val initialState = GameState(GameState.Player(0, 0, 0, 0, 0), Resources.templeLevel, Constants.maximumTime)
 }
