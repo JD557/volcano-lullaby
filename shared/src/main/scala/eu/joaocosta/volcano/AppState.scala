@@ -10,6 +10,7 @@ case object Loading                                                 extends AppS
 final case class Intro(frame: Int)                                  extends AppState
 case object Menu                                                    extends AppState
 case object GameOver                                                extends AppState
+case object Thanks                                                  extends AppState
 final case class LevelTransition(finalState: GameState, frame: Int) extends AppState
 
 final case class GameState(
