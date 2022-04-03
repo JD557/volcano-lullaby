@@ -18,7 +18,7 @@ object Resources {
 
   val volcanoBackground = Image.loadBmpImage(Resource("assets/background.bmp")).get
   val volcanoTileset    = SpriteSheet(Image.loadBmpImage(Resource("assets/volcano-tiles.bmp")).get, 16, 16)
-  val volcanoLevel      = Level.load(Resource("assets/level.txt"), volcanoTileset, volcanoBackground)
+  val volcanoLevel      = Level.load(Resource("assets/level-volcano.txt"), volcanoTileset, volcanoBackground)
 
   val beachBackground = Image.loadBmpImage(Resource("assets/intro-bg.bmp")).get
   val beachTileset    = SpriteSheet(Image.loadBmpImage(Resource("assets/beach-tiles.bmp")).get, 16, 16)
