@@ -8,6 +8,7 @@ object Resources {
   val menu     = Image.loadBmpImage(Resource("assets/menu.bmp")).get
   val gameOver = Image.loadBmpImage(Resource("assets/gameover.bmp")).get
 
+  val logo       = Image.loadBmpImage(Resource("assets/logo.bmp")).get
   val goText     = Image.loadBmpImage(Resource("assets/go.bmp")).get
   val finishText = Image.loadQoiImage(Resource("assets/finish.qoi")).get
   val pressEnter = Image.loadQoiImage(Resource("assets/press-enter.qoi")).get

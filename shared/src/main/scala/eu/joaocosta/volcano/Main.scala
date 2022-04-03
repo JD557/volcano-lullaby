@@ -64,6 +64,7 @@ object Main extends MinartApp {
           keyboardInput <- CanvasIO.getKeyboardInput
           _             <- CanvasIO.clear()
           _             <- CanvasIO.blit(Resources.menu)(0, 0, 0, 180)
+          _             <- CanvasIO.blit(Resources.logo, Some(Color(255, 255, 255)))(64, 32)
           _             <- CanvasIO.blit(Resources.pressEnter, Some(Color(255, 0, 255)))(137, 128)
           newState <-
             if (keyboardInput.keysPressed(KeyboardInput.Key.Enter)) transitionTo(GameState.initialState)
