@@ -1,7 +1,7 @@
 package eu.joaocosta.minart.extra
 
-import eu.joaocosta.minart.runtime.pure.RIO
 import eu.joaocosta.minart.runtime.Resource
+import eu.joaocosta.minart.runtime.pure.RIO
 
 // Dummy interface
 object NoopSoundPlayer extends SoundPlayer {
@@ -11,8 +11,8 @@ object NoopSoundPlayer extends SoundPlayer {
   def loadClip(resource: Resource): Unit = ()
 
   def newChannel(): SoundPlayer.SoundChannel[AudioResource] = new SoundPlayer.SoundChannel[AudioResource] {
-    def playOnce(clip: Unit): RIO[Any, Unit] = RIO.noop
+    def playOnce(clip: Unit): RIO[Any, Unit]   = RIO.noop
     def playLooped(clip: Unit): RIO[Any, Unit] = RIO.noop
-    val stop: RIO[Any, Unit] = RIO.noop
+    val stop: RIO[Any, Unit]                   = RIO.noop
   }
 }

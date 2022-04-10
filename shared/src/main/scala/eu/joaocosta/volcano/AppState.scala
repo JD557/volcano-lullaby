@@ -83,7 +83,7 @@ final case class GameState(
     canJump && occupiedTiles(player.xInt, player.yInt).exists(_ == 9)
 
   private def processInput(key: KeyboardInput): GameState =
-    if (key.isDown(KeyboardInput.Key.Space) && canJump)
+    if (key.keysPressed(KeyboardInput.Key.Space) && canJump)
       copy(player = player.copy(vy = -Constants.jumpSpeed))
     else if (key.isDown(KeyboardInput.Key.Right)) {
       val newVx =

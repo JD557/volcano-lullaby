@@ -194,7 +194,7 @@ object Main extends MinartApp {
           _ <- CanvasIO.when(gs.frame < 60 && gs.frame % 20 < 10)(
             CanvasIO.blit(Resources.goText, Some(Color(255, 255, 255)))(128, 64)
           )
-          _ <- CanvasIO.when(keyboardInput.isDown(KeyboardInput.Key.Space) && gs.canJump)(
+          _ <- CanvasIO.when(keyboardInput.keysPressed(KeyboardInput.Key.Space) && gs.canJump)(
             Resources.sfxSoundChannel.playOnce(Resources.jumpSound)
           )
           newState = gs.nextState(keyboardInput)

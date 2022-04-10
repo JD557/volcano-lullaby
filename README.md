@@ -36,11 +36,6 @@ If you get stuck on the temple level (reverse)llaw eht no sgniward eht ta kool(/
 
 # Dev notes
 
-The compo version of the game was build using a snapshot version of Minart: https://github.com/JD557/minart/tree/d79b4847e7694148487061e31f863ecd86a14f50
-
-Unfortunately, during the development of the game I found some issues with the library.
-I might publish an RC once I fix those issues, to make compilation easier.
-
 Tools:
  - Scala
  - Minart

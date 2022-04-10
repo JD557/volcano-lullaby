@@ -1,6 +1,7 @@
 package eu.joaocosta.minart
 
-import java.io.{ FileInputStream, InputStream }
+import java.io.{FileInputStream, InputStream}
+
 import scala.io.Source
 
 import eu.joaocosta.minart.backend.defaults.DefaultBackend
