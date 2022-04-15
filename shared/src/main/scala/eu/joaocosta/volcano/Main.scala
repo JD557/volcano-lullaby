@@ -17,7 +17,7 @@ object Main extends MinartApp {
       else if (player.vy != 0) Resources.character.getSprite(2, 0)
       else if (player.vx != 0) Resources.character.getSprite(1, (frame / Constants.animationMultiplier) % 4)
       else Resources.character.getSprite(0, (frame / Constants.animationMultiplier)                     % 4)
-    if (player.lastDirX == -1) Image.flipH(sprite) else sprite
+    if (player.lastDirX == -1) sprite.flipH else sprite
   }
 
   type State = AppState
