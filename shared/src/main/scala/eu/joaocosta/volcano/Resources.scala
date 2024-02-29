@@ -1,5 +1,6 @@
 package eu.joaocosta.volcano
 
+import eu.joaocosta.minart.audio.sound._
 import eu.joaocosta.minart.backend.defaults._
 import eu.joaocosta.minart.extra._
 import eu.joaocosta.minart.graphics.image._
@@ -35,32 +36,16 @@ object Resources {
   lazy val templeTileset    = SpriteSheet(Image.loadQoiImage(Resource("assets/temple-tiles.qoi")).get, 16, 16)
   lazy val templeLevel      = Level.load(Resource("assets/level-temple.txt"), templeTileset, templeBackground)
 
-  lazy val soundPlayer     = SoundPlayer.default()
-  lazy val bgSoundChannel  = soundPlayer.newChannel()
-  lazy val sfxSoundChannel = soundPlayer.newChannel()
+  lazy val bgSoundChannel  = 0
+  lazy val sfxSoundChannel = 1
 
-  lazy val introSound = soundPlayer.loadClip(Resource(Platform() match {
-    case Platform.JS => "assets/intro.mp3"
-    case _           => "assets/intro.mid"
-  }))
+  lazy val introSound = Sound.loadQoaClip(Resource("assets/intro.qoa")).get
   // Clear this after the jam
-  lazy val menuSound = soundPlayer.loadClip(Resource(Platform() match {
-    case Platform.JS => "assets/ingame.mp3"
-    case _           => "assets/ingame.mid"
-  }))
-  lazy val inGameSound = soundPlayer.loadClip(Resource(Platform() match {
-    case Platform.JS => "assets/menu.mp3"
-    case _           => "assets/menu.mid"
-  }))
-  lazy val gameoverSound = soundPlayer.loadClip(Resource(Platform() match {
-    case Platform.JS => "assets/gameover.mp3"
-    case _           => "assets/gameover.mid"
-  }))
-  lazy val lullabySound = soundPlayer.loadClip(Resource(Platform() match {
-    case Platform.JS => "assets/lullaby.mp3"
-    case _           => "assets/lullaby.mid"
-  }))
-  lazy val jumpSound = soundPlayer.loadClip(Resource("assets/jump.wav"))
+  lazy val menuSound     = Sound.loadQoaClip(Resource("assets/ingame.qoa")).get
+  lazy val inGameSound   = Sound.loadQoaClip(Resource("assets/menu.qoa")).get
+  lazy val gameoverSound = Sound.loadQoaClip(Resource("assets/gameover.qoa")).get
+  lazy val lullabySound  = Sound.loadQoaClip(Resource("assets/lullaby.qoa")).get
+  lazy val jumpSound     = Sound.loadQoaClip(Resource("assets/jump.qoa")).get
 
   val allResources: List[() => Any] = List(
     () => menu,
