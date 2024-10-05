@@ -1,15 +1,15 @@
 import sbtcrossproject.CrossPlugin.autoImport.{crossProject, CrossType}
+import scala.scalanative.build._
 
 name := "volcano"
 
-version := "0.1.0"
+version := "0.2.0"
 
-ThisBuild / scalafixDependencies += "com.github.liancheng" %% "organize-imports" % "0.6.0"
-ThisBuild / scalaVersion := "3.1.1"
-ThisBuild / scalafmtOnCompile := true
-ThisBuild / semanticdbEnabled := true
-ThisBuild / semanticdbVersion := scalafixSemanticdb.revision
-ThisBuild / scalafixOnCompile := true
+ThisBuild / scalaVersion                                   := "3.3.4"
+ThisBuild / scalafmtOnCompile                              := true
+ThisBuild / semanticdbEnabled                              := true
+ThisBuild / semanticdbVersion                              := scalafixSemanticdb.revision
+ThisBuild / scalafixOnCompile                              := true
 
 lazy val root =
   crossProject(JVMPlatform, JSPlatform, NativePlatform)
@@ -17,7 +17,7 @@ lazy val root =
     .settings(
       Seq(
         libraryDependencies ++= List(
-          "eu.joaocosta" %%% "minart" % "0.4.0"
+          "eu.joaocosta" %%% "minart" % "0.6.1"
         )
       )
     )
@@ -29,12 +29,13 @@ lazy val root =
     )
     .nativeSettings(
       Seq(
-        nativeLinkStubs := true,
-        nativeMode      := "release",
-        nativeLTO       := "thin",
-        nativeGC        := "immix",
         nativeConfig ~= {
-          _.withEmbedResources(true)
+          _
+          .withLinkStubs(true)
+          .withMode(Mode.releaseFull)
+          .withLTO(LTO.thin)
+          .withGC(GC.commix)
+          .withEmbedResources(true)
         }
       )
     )
