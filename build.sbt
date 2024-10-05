@@ -5,8 +5,7 @@ name := "volcano"
 
 version := "0.2.0"
 
-ThisBuild / scalafixDependencies += "com.github.liancheng" %% "organize-imports" % "0.6.0"
-ThisBuild / scalaVersion                                   := "3.3.3"
+ThisBuild / scalaVersion                                   := "3.3.4"
 ThisBuild / scalafmtOnCompile                              := true
 ThisBuild / semanticdbEnabled                              := true
 ThisBuild / semanticdbVersion                              := scalafixSemanticdb.revision
@@ -18,7 +17,7 @@ lazy val root =
     .settings(
       Seq(
         libraryDependencies ++= List(
-          "eu.joaocosta" %%% "minart" % "0.6.0-M3"
+          "eu.joaocosta" %%% "minart" % "0.6.1"
         )
       )
     )
